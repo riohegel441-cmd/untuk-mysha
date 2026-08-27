@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kejutan Spesial Ulang Tahun!</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Background Balon Bergerak */
+        .balloon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: rise linear infinite;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: rgba(255,255,255,0.5);
+            transform: translateX(-50%);
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(720deg); }
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 700px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.8rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .content-flex {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-frame-wrapper {
+            position: relative;
+            padding: 10px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffecd2);
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 5px solid #fff;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #eee;
+        }
+
+        .cake-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .cake {
+            font-size: 6rem;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .cake:hover {
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        .flame {
+            font-size: 3rem;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: drop-shadow(0 0 10px #ffeb3b);
+            animation: flicker 0.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+        }
+
+        .instruction {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+
+        /* Kotak Kejutan Doa */
+        .surprise-box {
+            background: rgba(255, 235, 59, 0.2);
+            border: 2px dashed #ffeb3b;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .surprise-box:hover {
+            background: rgba(255, 235, 59, 0.3);
+            transform: scale(1.02);
+        }
+
+        .surprise-title {
+            font-weight: 600;
+            color: #ffeb3b;
+            font-size: 1.1rem;
+        }
+
+        .surprise-content {
+            display: none;
+            margin-top: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .countdown-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .countdown-title {
+            font-size: 0.9rem;
+            color: #ffeb3b;
+            margin-bottom: 8px;
+        }
+
+        .timers {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-item {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            min-width: 50px;
+        }
+
+        .timer-number {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .timer-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #ff4081;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #e91e63;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Balon Bergerak -->
+    <div class="balloon-container" id="balloonContainer"></div>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <h1>🎉 Happy Birthday! 🎂</h1>
+            <p class="subtitle">Semoga hari-harimu selalu dipenuhi kebahagiaan!</p>
+
+            <div class="content-flex">
+                <!-- Bingkai Foto -->
+                <div class="photo-section">
+                    <div class="photo-frame-wrapper">
+                        <div class="photo-frame">
+                            <!-- Ganti URL_FOTO_ANDA dengan link foto adik -->
+                            <img src="IBUK_MIRA.jpg" alt="Foto Ulang Tahun" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="photo-placeholder" style="display:none;">
+                                Ganti URL Foto<br>di Kode HTML
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kue & Lilin Interaktif -->
+                <div class="cake-section">
+                    <div class="cake" id="cakeElement" onclick="extinguishCandle()">
+                        🍰
+                        <span class="flame" id="flame">🔥</span>
+                    </div>
+                    <div class="instruction">Klik lilin untuk meniup!</div>
+                </div>
+            </div>
+
+            <!-- KOTAK KEJUTAN DOA (BARU) -->
+            <div class="surprise-box" onclick="revealSurprise()">
+                <div class="surprise-title">🎁 Klik di Sini untuk Membuka Pesan & Doa Spesial! ✨</div>
+                <div class="surprise-content" id="surpriseText">
+                    "Panjang umur, sehat selalu, jadi anak yang solehah yang barokah, serta menjadi anak yang pintar, to'at kepada orang tua. Kelak menjadi sukses yang barokah adikkk." ❤️
+                </div>
+            </div>
+
+            <!-- Hitung Mundur 48 Jam Berjalan -->
+            <div class="countdown-box">
+                <div class="countdown-title">⏳ Waktu Menuju Pesta Besar</div>
+                <div class="timers">
+                    <div class="timer-item">
+                        <div class="timer-number" id="hours">48</div>
+                        <div class="timer-label">Jam</div>
+                    </div>
+                    <div class="timer-item">
+                        <div class="timer-number" id="minutes">00</div>
+                        <div class="timer-label">Menit</div>
+                    </div>
+                    <div class="timer-item">
+                        <div class="timer-number" id="seconds">00</div>
+                        <div class="timer-label">Detik</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn" onclick="triggerConfetti()">🎉 Lempar Confetti!</button>
+        </div>
+
+        <!-- Pemutar Musik SoundCloud Otomatis -->
+        <div style="display:none;">
+            <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/happy-birthday-official/happy-birthday-to-you-piano?si=141c60d22663463d94cbabed04360489&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        // 1. Animasi Balon Bergerak di Background
+        const balloonContainer = document.getElementById('balloonContainer');
+        const colors = ['#ff4081', '#764ba2', '#ffeb3b', '#00e676', '#00b0ff'];
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            const size = Math.random() * 60 + 40; 
+            balloon.style.width = `${size}px`;
+            balloon.style.height = `${size}px`;
+            balloon.style.left = `${Math.random() * 100}%`;
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            balloon.style.animationDelay = `${Math.random() * 5}s`;
+            balloonContainer.appendChild(balloon);
+
+            setTimeout(() => { balloon.remove(); }, 10000);
+        }
+        setInterval(createBalloon, 300);
+
+        // 2. Logika Lilin & Confetti
+        let isCandleLit = true;
+        function extinguishCandle() {
+            const flame = document.getElementById('flame');
+            const instruction = document.querySelector('.cake-section .instruction');
+            if (isCandleLit) {
+                flame.style.display = 'none';
+                instruction.textContent = 'Wuuush! Lilin padam! 🎉';
+                triggerConfetti();
+                isCandleLit = false;
+            } else {
+                flame.style.display = 'block';
+                instruction.textContent = 'Klik lilin untuk meniup!';
+                isCandleLit = true;
+            }
+        }
+
+        function triggerConfetti() {
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+        }
+
+        // 3. Fungsi Membuka Kotak Kejutan Doa
+        function revealSurprise() {
+            const textContent = document.getElementById('surpriseText');
+            if (textContent.style.display === 'block') {
+                textContent.style.display = 'none';
+            } else {
+                textContent.style.display = 'block';
+                triggerConfetti(); // Tambah efek meriah saat kotak dibuka
+            }
+        }
+
+        // 4. Logika Hitung Mundur Waktu Berjalan (48 Jam)
+        const countDownDate = new Date().getTime() + (48 * 60 * 60 * 1000);
+
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const totalHours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerHTML = totalHours < 10 ? "0" + totalHours : totalHours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.querySelector(".countdown-box").innerHTML = "<div style='font-weight:bold; color:#ffeb3b;'>Waktu Ulang Tahun Telah Tiba! 🎊</div>";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
